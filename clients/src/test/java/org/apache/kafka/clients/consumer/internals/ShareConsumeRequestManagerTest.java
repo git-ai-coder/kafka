@@ -160,7 +160,7 @@ public class ShareConsumeRequestManagerTest {
     private final TopicIdPartition t2ip0 = new TopicIdPartition(topicId2, t2p0);
     private final int validLeaderEpoch = 0;
     private final MetadataResponse initialUpdateResponse =
-            RequestTestUtils.metadataUpdateWithIds(1, Map.of(topicName, 2), topicIds);
+            RequestTestUtils.metadataUpdateWithIds(1, topicPartitionCounts, tp -> validLeaderEpoch, topicIds);
 
     private final long retryBackoffMs = 100;
     private final long requestTimeoutMs = 30000;
@@ -194,11 +194,6 @@ public class ShareConsumeRequestManagerTest {
         subscriptions.assignFromSubscribed(partitions);
 
         client.updateMetadata(initialUpdateResponse);
-
-        // A dummy metadata update to ensure valid leader epoch.
-        metadata.updateWithCurrentRequestVersion(RequestTestUtils.metadataUpdateWithIds("kafka-cluster", 1,
-                Map.of(), topicPartitionCounts,
-                tp -> validLeaderEpoch, topicIds), false, 0L);
     }
 
     @AfterEach

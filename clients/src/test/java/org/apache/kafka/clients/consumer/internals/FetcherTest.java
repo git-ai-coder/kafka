@@ -211,22 +211,14 @@ public class FetcherTest {
 
     private void assignFromUser(Set<TopicPartition> partitions, int numNodes) {
         subscriptions.assignFromUser(partitions);
-        client.updateMetadata(RequestTestUtils.metadataUpdateWithIds(numNodes, singletonMap(topicName, 4), topicIds));
-
-        // A dummy metadata update to ensure valid leader epoch.
-        metadata.updateWithCurrentRequestVersion(RequestTestUtils.metadataUpdateWithIds("dummy", numNodes,
-            Collections.emptyMap(), singletonMap(topicName, 4),
-            tp -> validLeaderEpoch, topicIds), false, 0L);
+        client.updateMetadata(RequestTestUtils.metadataUpdateWithIds(numNodes, singletonMap(topicName, 4),
+            tp -> validLeaderEpoch, topicIds));
     }
 
     private void assignFromUser(TopicPartition partition) {
         subscriptions.assignFromUser(singleton(partition));
-        client.updateMetadata(RequestTestUtils.metadataUpdateWithIds(1, singletonMap(partition.topic(), 1), Collections.emptyMap()));
-
-        // A dummy metadata update to ensure valid leader epoch.
-        metadata.update(9, RequestTestUtils.metadataUpdateWithIds("dummy", 1,
-            Collections.emptyMap(), singletonMap(partition.topic(), 1),
-            tp -> validLeaderEpoch, topicIds), false, 0L);
+        client.updateMetadata(RequestTestUtils.metadataUpdateWithIds(1, singletonMap(partition.topic(), 1),
+            tp -> validLeaderEpoch, Collections.emptyMap()));
     }
 
     @AfterEach

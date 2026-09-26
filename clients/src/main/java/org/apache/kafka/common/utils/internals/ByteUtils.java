@@ -239,7 +239,7 @@ public final class ByteUtils {
                     } else {
                         result |= (tmp & 127) << 21;
                         result |= (tmp = buffer.get()) << 28;
-                        if (tmp < 0) {
+                        if (tmp < 0 || tmp > 0x0F) {
                             throw illegalVarintException(result);
                         }
                     }
@@ -282,7 +282,7 @@ public final class ByteUtils {
                     } else {
                         result |= (tmp & 127) << 21;
                         result |= (tmp = (byte) in.read()) << 28;
-                        if (tmp < 0) {
+                        if (tmp < 0 || tmp > 0x0F) {
                             throw illegalVarintException(result);
                         }
                     }
@@ -433,7 +433,7 @@ public final class ByteUtils {
      * Write the given integer following the variable-length unsigned encoding from
      * <a href="http://code.google.com/apis/protocolbuffers/docs/encoding.html"> Google Protocol Buffers</a>
      * into the buffer.
-     * 
+     *
      * For implementation notes, see {@link #writeUnsignedVarint(int, ByteBuffer)}
      *
      * @param value The value to write

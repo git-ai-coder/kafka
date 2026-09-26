@@ -65,7 +65,7 @@ public class TopicMetadataFetcherTest {
     private final TopicPartition tp0 = new TopicPartition(topicName, 0);
     private final int validLeaderEpoch = 0;
     private final MetadataResponse initialUpdateResponse =
-        RequestTestUtils.metadataUpdateWithIds(1, singletonMap(topicName, 4), topicIds);
+        RequestTestUtils.metadataUpdateWithIds(1, singletonMap(topicName, 4), tp -> validLeaderEpoch, topicIds);
 
     private MockTime time = new MockTime(1);
     private SubscriptionState subscriptions;
@@ -82,11 +82,6 @@ public class TopicMetadataFetcherTest {
     private void assignFromUser(Set<TopicPartition> partitions) {
         subscriptions.assignFromUser(partitions);
         client.updateMetadata(initialUpdateResponse);
-
-        // A dummy metadata update to ensure valid leader epoch.
-        metadata.updateWithCurrentRequestVersion(RequestTestUtils.metadataUpdateWithIds("dummy", 1,
-            Collections.emptyMap(), singletonMap(topicName, 4),
-            tp -> validLeaderEpoch, topicIds), false, 0L);
     }
 
     @AfterEach
